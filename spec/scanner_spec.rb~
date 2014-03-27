@@ -11,6 +11,7 @@ describe Scanner do
     let(:filename) { 'test_file.sass' }
     let(:invoke) { scanner.scan_sass(filename) }
     
+    
     %w[#id_selector .class_selector].each do |selector|
       context "when the sass file contains '#{selector}'" do
         before do
