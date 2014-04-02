@@ -3,7 +3,7 @@ class Scanner
   attr_reader :result
   
   def initialize(file)
-    @result = Hash.new
+    @result = Hash.new([])
     @file = file
   end
     
@@ -12,9 +12,9 @@ class Scanner
       line = line.chomp
 
       if !!(/\A[\.#][a-zA-Z_-]+/ =~ line)
-        result[line] = i + 1
+        result[line] += [i + 1]
       end
-    end
+    end    
   end
 
 end

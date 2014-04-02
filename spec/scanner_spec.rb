@@ -4,8 +4,8 @@ require 'active_support/core_ext/string/strip'
 describe Scanner, fakefs: true do
   
   selectors = {
-    '#id_selector' => 1,
-    '.class_selector' => 6
+    '#id_selector' => [1, 10],
+    '.class_selector' => [6]
   }
   
   subject(:scanner) { Scanner.new(file) }
@@ -23,6 +23,9 @@ describe Scanner, fakefs: true do
       .class_selector
         float: left
         width: 600px
+      
+      #id_selector
+        background-color: #375
     END_SASS
   end
   
