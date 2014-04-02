@@ -17,6 +17,10 @@ describe Scanner do
           File.write(filename, selector)
         end
         
+        after do
+          File.delete(filename)
+        end
+        
         it 'adds a new selector to the result' do
           expect { invoke }.to change { scanner.result.size }.by(1)
         end
