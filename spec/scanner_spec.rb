@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe Scanner do
+describe Scanner, fakefs: true do
   
   selectors = %w[#id_selector .class_selector]
   
@@ -20,6 +20,7 @@ describe Scanner do
   end
 
   after do
+    file.close if !(!file || file.closed?)
     File.delete(filename)
   end
 
