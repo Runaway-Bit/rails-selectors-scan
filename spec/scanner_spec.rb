@@ -1,30 +1,41 @@
 require 'scanner'
 
 describe Scanner do
-  subject(:scanner) { Scanner.new }
   
+  selectors = %w[#id_selector .class_selector]
+  
+  subject(:scanner) { Scanner.new(file) }
+  
+  let(:file) { File.open(filename, 'r') }
+  let(:filename) { 'test_file.sass' }
+  
+  let(:file_content) do
+    selectors.inject('') do |content, selector|
+      content += "#{selector}\n"
+    end
+  end
+  
+  before do
+    File.write(filename, file_content)
+  end
+
+  after do
+    File.delete(filename)
+  end
+
   it 'has a result which is a Hash' do
     expect(scanner.result).to be_a Hash
   end
   
   describe '#scan_sass' do
-    let(:filename) { 'test_file.sass' }
-    let(:invoke) { scanner.scan_sass(filename) }
+    let(:invoke) { scanner.scan_sass }
+
+    it "adds the #{selectors.size} new selectors to the result" do
+      expect { invoke }.to change { scanner.result.size }.by(selectors.size)
+    end
     
-    %w[#id_selector .class_selector].each do |selector|
+    selectors.each do |selector|
       context "when the sass file contains '#{selector}'" do
-        before do
-          File.write(filename, selector)
-        end
-        
-        after do
-          File.delete(filename)
-        end
-        
-        it 'adds a new selector to the result' do
-          expect { invoke }.to change { scanner.result.size }.by(1)
-        end
-        
         specify "the result has a selector with key = '#{selector}'" do
           invoke
           expect(scanner.result[selector]).to_not be_nil

@@ -2,15 +2,14 @@ class Scanner
     
   attr_reader :result
   
-  def initialize
+  def initialize(file)
     @result = Hash.new
+    @file = file
   end
     
-  def scan_sass (filename)
-    File.open(filename, 'r') do |file|
-      file.each_with_index do |line, i|
-        result[line] = i + 1
-      end
+  def scan_sass
+    @file.each_with_index do |line, i|
+      result[line.chomp] = i + 1
     end
   end
 
