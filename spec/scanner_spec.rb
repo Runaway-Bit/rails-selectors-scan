@@ -2,18 +2,12 @@ require_relative 'spec_helper'
 require 'active_support/core_ext/string/strip'
 
 describe Scanner, fakefs: true do
-  
-  selectors = {
-    '#id_selector' => [1, 10],
-    '.class_selector' => [6]
-  }
-  
-  subject(:scanner) { Scanner.new(file) }
-  
-  let(:file) { File.open(filename, 'r') }
-  let(:filename) { 'test_file.sass' }
-  
-  let(:file_content) do
+ 
+  subject(:scanner) { Scanner.new(input_file, output_file) }
+
+  let(:input_file) { File.open(input_filename, 'r') }
+  let(:input_filename) { 'test_file.sass' }
+  let(:input_content) do
     <<-END_SASS.strip_heredoc
       #id_selector
         border: 1px solid #ccc
@@ -28,35 +22,31 @@ describe Scanner, fakefs: true do
         background-color: #375
     END_SASS
   end
-  
-  
-  
+
+  let(:output_filename) { 'output.yml' }
+  let(:output_file) { File.open(output_filename, 'w') }  
+
   before do
-    File.write(filename, file_content)
+    File.write(input_filename, input_content)
   end
 
   after do
-    file.close if !(!file || file.closed?)
-    File.delete(filename)
+    input_file.close if !(!input_file || input_file.closed?)
+    output_file.close if !(!output_file || output_file.closed?)
+    File.delete(input_filename)
   end
 
-  it 'has a result which is a Hash' do
-    expect(scanner.result).to be_a Hash
-  end
-  
   describe '#scan_sass' do
     let(:invoke) { scanner.scan_sass }
 
-    it "adds the #{selectors.size} new selectors to the result" do
-      expect { invoke }.to change { scanner.result.size }.by(selectors.size)
-    end
-    
-    selectors.each do |selector, line_number|
-      specify "the result's selector '#{selector}' has a '#{line_number}'" do
-        invoke
-        expect(scanner.result[selector]).to eq line_number
-      end
-    end # selectors array .each
+    it 'writes the result as a YAML to the output file' do
+      expected_result = {
+        '#id_selector'    => [1, 10],
+        '.class_selector' => [6]
+      }
+      invoke
+      expect(YAML.load_file(output_filename)).to eq expected_result
+    end    
   end
 
 end
