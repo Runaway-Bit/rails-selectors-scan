@@ -8,8 +8,12 @@ class Scanner
   end
     
   def scan_sass
-    @file.each_with_index do |line, i|
-      result[line.chomp] = i + 1
+    @file.each.with_index do |line, i|
+      line = line.chomp
+
+      if !!(/\A[\.#][a-zA-Z_-]+/ =~ line)
+        result[line] = i + 1
+      end
     end
   end
 
