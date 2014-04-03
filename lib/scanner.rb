@@ -14,8 +14,9 @@ class Scanner
     @input_file.each.with_index do |line, i|
       line.strip!
 
-      unless line.empty? || !(/:\s/ =~ line).nil?
-        selectors = line.split(',')
+      unless line.empty? || !(/(:\s|\A\/\/)/ =~ line).nil?
+        selectors, *after_comment = line.split('//')
+        selectors = selectors.split(',')
         selectors.each { |selector|  result[selector.strip] += [i + 1] }
       end
     end

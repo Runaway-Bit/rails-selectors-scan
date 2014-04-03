@@ -74,6 +74,10 @@ describe Scanner, fakefs: true do
           &:hover
               background-color: #49afcd
               background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4)
+
+      // comment 1
+      
+      #id_hover // comment 2
     END_SASS
   end
 
@@ -116,7 +120,8 @@ describe Scanner, fakefs: true do
         'input:checked + .select-option-text'                            => [55],
         'div#range-text span'                                            => [58],
         'span#total-cap-current'                                         => [58],
-        '.dropdown-menu > li > a.hover-breakdown-color'                  => [61]
+        '.dropdown-menu > li > a.hover-breakdown-color'                  => [61],
+        '#id_hover'                                                      => [68]  
       }
       invoke
       expect(YAML.load_file(output_filename)).to eq expected_result
