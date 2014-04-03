@@ -33,6 +33,47 @@ describe Scanner, fakefs: true do
           padding: 0 1% 0 1%
           &.raised
               z-index: 8900
+
+      #concrete-fields-pane .slimScrollDiv
+          margin-top: -10px
+
+      #concrete-fields-pane .slimScrollBar
+          opacity: 0.1 !important
+          &:hover
+              opacity: 0.2  !important
+
+      #concrete-fields-pane .slimScrollDiv>#accordions
+          margin-top: 0px
+
+      .delete-select-dropzone.active
+          border: 2px dashed #EFEFEF
+
+      #searchbox > i.fa
+          display: none
+
+      .btn-dedupe:hover, #btn-dedupe:focus
+          color: white
+          
+      .btn-dedupe[disabled]
+          color: white
+      
+      #dedupe-drop > div.dedupe:not(.ui-sortable-helper):first-child
+          &:before
+              content: "Criteria:"
+              
+      .select-header .row-fluid [class*="span"]
+          min-height: 20px !important
+
+      input:checked + .select-option-text
+          color: black
+          
+      div#range-text span, span#total-cap-current
+          font-weight: bold
+
+      .dropdown-menu > li > a.hover-breakdown-color
+          &:hover
+              background-color: #49afcd
+              background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4)
     END_SASS
   end
 
@@ -54,12 +95,28 @@ describe Scanner, fakefs: true do
 
     it 'writes the result as a YAML to the output file' do
       expected_result = {
-        '#id_selector'    => [1, 10],
-        '.class_selector' => [6],
-        '#main'           => [14],
-        'form.no-margin'  => [17],
-        '#header'         => [20],
-        '&.raised'        => [22]
+        '#id_selector'                                                   => [1, 10],
+        '.class_selector'                                                => [6],
+        '#main'                                                          => [14],
+        'form.no-margin'                                                 => [17],
+        '#header'                                                        => [20],
+        '&.raised'                                                       => [22],
+        '#concrete-fields-pane .slimScrollDiv'                           => [25],
+        '#concrete-fields-pane .slimScrollBar'                           => [28],
+        '&:hover'                                                        => [30,62],
+        '#concrete-fields-pane .slimScrollDiv>#accordions'               => [33],
+        '.delete-select-dropzone.active'                                 => [36],
+        '#searchbox > i.fa'                                              => [39],
+        '.btn-dedupe:hover'                                              => [42],
+        '#btn-dedupe:focus'                                              => [42],
+        '.btn-dedupe[disabled]'                                          => [45],
+        '#dedupe-drop > div.dedupe:not(.ui-sortable-helper):first-child' => [48],
+        '&:before'                                                       => [49],
+        '.select-header .row-fluid [class*="span"]'                      => [52],
+        'input:checked + .select-option-text'                            => [55],
+        'div#range-text span'                                            => [58],
+        'span#total-cap-current'                                         => [58],
+        '.dropdown-menu > li > a.hover-breakdown-color'                  => [61]
       }
       invoke
       expect(YAML.load_file(output_filename)).to eq expected_result

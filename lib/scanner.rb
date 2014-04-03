@@ -14,8 +14,9 @@ class Scanner
     @input_file.each.with_index do |line, i|
       line.strip!
 
-      if !!(/\A[a-zA-Z&]*[\.#][a-zA-Z_-]+/ =~ line)
-        result[line] += [i + 1]
+      unless line.empty? || !(/:\s/ =~ line).nil?
+        selectors = line.split(',')
+        selectors.each { |selector|  result[selector.strip] += [i + 1] }
       end
     end
 
