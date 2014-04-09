@@ -78,6 +78,17 @@ describe Scanner, fakefs: true do
       // comment 1
       
       #id_hover // comment 2
+      
+      /* Related to the positioning */
+            
+      #id_hover /* hola */
+          border-radius: 0px
+          
+      /***** 
+      * CONCRETE FIELDS PANE 
+      *****/
+      
+      #id_hover       
     END_SASS
   end
 
@@ -121,7 +132,7 @@ describe Scanner, fakefs: true do
         'div#range-text span'                                            => [58],
         'span#total-cap-current'                                         => [58],
         '.dropdown-menu > li > a.hover-breakdown-color'                  => [61],
-        '#id_hover'                                                      => [68]  
+        '#id_hover'                                                      => [68, 72, 79]  
       }
       invoke
       expect(YAML.load_file(output_filename)).to eq expected_result
