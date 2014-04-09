@@ -43,19 +43,23 @@ class Scanner
 end
 
 if __FILE__ == $PROGRAM_NAME
-  input_filename, output_filename = ARGV
-  
-  begin
-    input_file = File.open(input_filename, 'r')
-    output_file = File.open(output_filename, 'w')
-    scanner = Scanner.new(input_file, output_file)
-    scanner.scan_sass
-  rescue StandardError => e
-    raise e
-  ensure
-    [input_file, output_file].each do |file|
-      file.close unless file.nil?
-    end
+  directory, output_filename = ARGV
+ 
+  puts Dir["#{directory}/**/*.sass"]
+ 
+  Dir["#{directory}/**/*.sass"].each do |input_filename|
+      begin
+        input_file = File.open(input_filename, 'r')
+        output_file = File.open(output_filename, 'a')
+        scanner = Scanner.new(input_file, output_file)
+        scanner.scan_sass
+      rescue StandardError => e
+        raise e
+      ensure
+        [input_file, output_file].each do |file|
+          file.close unless file.nil?
+        end
+      end
   end
   
 end
