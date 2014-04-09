@@ -88,6 +88,9 @@ describe Scanner, fakefs: true do
       * CONCRETE FIELDS PANE 
       *****/
       
+      @import bootstrap2-switchhtml, body 
+          height: 100%
+      
       #id_hover       
     END_SASS
   end
@@ -132,7 +135,7 @@ describe Scanner, fakefs: true do
         'div#range-text span'                                            => [58],
         'span#total-cap-current'                                         => [58],
         '.dropdown-menu > li > a.hover-breakdown-color'                  => [61],
-        '#id_hover'                                                      => [68, 72, 79]  
+        '#id_hover'                                                      => [68, 72, 82]  
       }
       invoke
       expect(YAML.load_file(output_filename)).to eq expected_result

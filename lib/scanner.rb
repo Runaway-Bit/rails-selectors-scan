@@ -27,7 +27,7 @@ class Scanner
           commented = MULTILINE_COMMENT_END.match(after_comment).nil?
         end
         
-        unless line.empty? || !(/(:\s|\A\/\/)/ =~ line).nil?
+        unless line.empty? || !(/(:\s|\A\/\/|\A@import)/ =~ line).nil?
           selectors, *after_comment = line.split('//')
           selectors = selectors.split(',')
           selectors.each { |selector|  result[selector.strip] += [i + 1] }
