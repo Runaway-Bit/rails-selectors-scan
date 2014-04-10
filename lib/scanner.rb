@@ -33,8 +33,25 @@ class Scanner
           selectors.each { |selector|  result[selector.strip] += [i + 1] }
         end
       end
-      
+
       commented &&= MULTILINE_COMMENT_END.match(line).nil?
+    end
+
+    @output_file.write(result.to_yaml)
+  end
+
+  def scan_coffee
+    @input_file.each.with_index do |line, i|
+      line.strip!
+
+      # http://rubular.com/r/aJ7a81kNaR
+      matches = /\$\(\s*['"]([^)]+)['"]\s*\)/.match(line)
+
+      unless matches.nil?
+        selectors = matches.captures.first
+        selectors = selectors.split(',')
+        selectors.each { |selector|  result[selector.strip] += [i + 1] }
+      end
     end
 
     @output_file.write(result.to_yaml)
@@ -44,9 +61,13 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   directory, output_filename = ARGV
- 
+
+  puts "###  SASS FILES  ###"
   puts Dir["#{directory}/**/*.sass"]
- 
+  puts "### COFFEE FILES ###"
+  puts Dir["#{directory}/**/*.coffee"]
+  File.delete(output_filename) unless !File.exist?(output_filename)
+
   Dir["#{directory}/**/*.sass"].each do |input_filename|
       begin
         input_file = File.open(input_filename, 'r')
@@ -61,5 +82,20 @@ if __FILE__ == $PROGRAM_NAME
         end
       end
   end
-  
+
+  Dir["#{directory}/**/*.coffee"].each do |input_filename|
+      begin
+        input_file = File.open(input_filename, 'r')
+        output_file = File.open(output_filename, 'a')
+        scanner = Scanner.new(input_file, output_file)
+        scanner.scan_coffee
+      rescue StandardError => e
+        raise e
+      ensure
+        [input_file, output_file].each do |file|
+          file.close unless file.nil?
+        end
+      end
+  end
+ 
 end
