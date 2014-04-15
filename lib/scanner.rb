@@ -44,18 +44,42 @@ class Scanner
     @input_file.each.with_index do |line, i|
       line.strip!
 
-      # http://rubular.com/r/aJ7a81kNaR
-      matches = /\$\(\s*['"]([^)]+)['"]\s*\)/.match(line)
+      functions = ['\$','.children','.closest','.find','.next',\
+        '.nextAll','.nextUntil','.offsetParent','.parent','.parents',\
+        '.parentsUntil','.prev','.prevAll','.prevUntil','.siblings']
 
-      unless matches.nil?
-        selectors = matches.captures.first
-        selectors = selectors.split(',')
-        selectors.each { |selector|  result[selector.strip] += [i + 1] }
+      matches = nil
+      functions.each do |function|
+        selectors = find_selectors(function, line)
+        selectors.each { |selector|  result[selector.strip] += [i + 1] }        
       end
     end
 
     @output_file.write(result.to_yaml)
   end
+
+  private
+    def find_selectors(function, string)
+      ret = []
+      
+      # http://rubular.com/r/aJ7a81kNaR
+      regexps = [
+                 /#{function}\(\s*['"]([^)]+)['"]\s*\)/ ,
+                 /#{function}\(\s*'([^']+)'\s*\)/,
+                 /#{function}\(\s*"([^"]+)"\s*\)/
+                ]
+      
+      regexps.each do |regexp|
+        matches = regexp.match(string)
+        unless matches.nil?
+          ret = matches.captures.first.split(',')
+          ret += find_selectors(function, matches.post_match)        
+          break
+        end 
+      end
+    
+      ret  
+    end
 
 end
 

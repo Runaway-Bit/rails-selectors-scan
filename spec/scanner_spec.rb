@@ -203,6 +203,19 @@ describe Scanner, fakefs: true do
           fieldPresence = $('.output[data-cf-id='+outputId+']').length
 
           fieldPresence = $('.select[data-cf-id='+selectId+']').length
+          
+          locals.setBindings = () ->
+            $(".flash-alert").on "click", "a.close", (e) ->
+              $(@).closest(".flash-alert").remove()
+              
+          currentFieldsCount = $('#breakdown-drop').children('.breakdown').length
+          
+          locals.actionHeader = (anchor) ->
+            chevronIcon = anchor.children("span").children('i')
+            
+          $(@).children(':not(:hidden)')
+          
+          $(@).children(":not(:hidden)")          
       END_SASS
     end
   
@@ -210,6 +223,7 @@ describe Scanner, fakefs: true do
       expected_result = {
         '#main'                                      => [7,10],
         '#order-result'                              => [8,11],
+        '.async-div'                                 => [8,11],
         '#alert-message'                             => [14],
         '#navbar'                                    => [19,21],
         '#header-wrapper'                            => [21],
@@ -222,7 +236,13 @@ describe Scanner, fakefs: true do
         '#select_"+groupId+" .select-content'        => [37],
         ".dedupe[data-cf-id='+dedupeId+']"           => [39],
         ".output[data-cf-id='+outputId+']"           => [41],
-        ".select[data-cf-id='+selectId+']"           => [43]
+        ".select[data-cf-id='+selectId+']"           => [43],
+        '.flash-alert'                               => [46,47],
+        '#breakdown-drop'                            => [49],
+        '.breakdown'                                 => [49],
+        'span'                                       => [52],
+        'i'                                          => [52],
+        ':not(:hidden)'                              => [54, 56]
       }
       scanner.scan_coffee
       expect(YAML.load_file(output_filename)).to eq expected_result
