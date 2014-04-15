@@ -60,14 +60,25 @@ class Scanner
 
   private
     def find_selectors(function, string)
-      matches = /#{function}\(\s*['"]([^)]+)['"]\s*\)/.match(string)        
-      # http://rubular.com/r/aJ7a81kNaR
+      ret = []
       
-      unless matches.nil?
-        selectors = matches.captures.first.split(',')
-        selectors += find_selectors(function, matches.post_match)
+      # http://rubular.com/r/aJ7a81kNaR
+      regexps = [
+                 /#{function}\(\s*['"]([^)]+)['"]\s*\)/ ,
+                 /#{function}\(\s*'([^']+)'\s*\)/,
+                 /#{function}\(\s*"([^"]+)"\s*\)/
+                ]
+      
+      regexps.each do |regexp|
+        matches = regexp.match(string)
+        unless matches.nil?
+          ret = matches.captures.first.split(',')
+          ret += find_selectors(function, matches.post_match)        
+          break
+        end 
       end
-      selectors || []
+    
+      ret  
     end
 
 end

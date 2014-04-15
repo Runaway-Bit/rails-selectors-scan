@@ -211,7 +211,11 @@ describe Scanner, fakefs: true do
           currentFieldsCount = $('#breakdown-drop').children('.breakdown').length
           
           locals.actionHeader = (anchor) ->
-            chevronIcon = anchor.children("span").children('i')          
+            chevronIcon = anchor.children("span").children('i')
+            
+          $(@).children(':not(:hidden)')
+          
+          $(@).children(":not(:hidden)")          
       END_SASS
     end
   
@@ -237,7 +241,8 @@ describe Scanner, fakefs: true do
         '#breakdown-drop'                            => [49],
         '.breakdown'                                 => [49],
         'span'                                       => [52],
-        'i'                                          => [52]
+        'i'                                          => [52],
+        ':not(:hidden)'                              => [54, 56]
       }
       scanner.scan_coffee
       expect(YAML.load_file(output_filename)).to eq expected_result
