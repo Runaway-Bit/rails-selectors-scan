@@ -73,7 +73,7 @@ class Scanner
         matches = regexp.match(string)
         unless matches.nil?
           ret = matches.captures.first.split(',')
-          ret += find_selectors(function, matches.post_match)        
+          ret.concat(find_selectors(function, matches.post_match))   
           break
         end 
       end
@@ -87,9 +87,9 @@ if __FILE__ == $PROGRAM_NAME
   directory, output_filename = ARGV
 
   puts "###  SASS FILES  ###"
-  puts Dir["#{directory}/**/*.sass"]
+  Dir["#{directory}/**/*.sass"].each.with_index{ |f,i| puts "#{i+1}: #{f}" }
   puts "### COFFEE FILES ###"
-  puts Dir["#{directory}/**/*.coffee"]
+  Dir["#{directory}/**/*.coffee"].each.with_index{ |f,i| puts "#{i+1}: #{f}" }
   File.delete(output_filename) unless !File.exist?(output_filename)
 
   Dir["#{directory}/**/*.sass"].each do |input_filename|
